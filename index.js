@@ -74,3 +74,13 @@ app.delete('/notes/:noteName', (req, res) => {
     fs.unlinkSync(notePath);
     res.send('Note deleted');
 });
+
+app.get('/notes', (req, res) => {
+    const files = fs.readdirSync(option.cache);
+    const notes = files.map(fileName => {
+        const text = fs.readFileSync(path.join(option.cache, fileName), 'utf8');
+        return { name: fileName, text };
+    });
+
+    res.json(notes);
+});
