@@ -102,3 +102,7 @@ app.post('/write', upload.none(), (req, res) => {
         res.status(500).send('Error creating note');
     }
 });
+
+app.get('/UploadForm.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'UploadForm.html'));
+});
