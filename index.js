@@ -4,6 +4,8 @@ const fs = require('fs');
 const express = require('express');
 const program = new Command();
 const app = express();
+const multer = require('multer');
+const upload = multer();
 
 program
   .option('-h, --host <type>', 'server host')
@@ -83,4 +85,20 @@ app.get('/notes', (req, res) => {
     });
 
     res.json(notes);
+});
+
+app.post('/write', upload.none(), (req, res) => {
+    const noteName = req.body.note_name;
+    const noteText = req.body.note;
+    const notePath = path.join(option.cache, noteName);
+    if (fs.existsSync(notePath)) {
+        return res.status(400).send('Note already exists');
+    }
+    try {
+        fs.writeFileSync(notePath, noteText);
+        res.status(201).send('Note created');
+    } catch (error) {
+        console.error('Error writing note:', error);
+        res.status(500).send('Error creating note');
+    }
 });
