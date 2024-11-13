@@ -63,3 +63,14 @@ app.put('/notes/:noteName', (req, res) => {
     fs.writeFileSync(notePath, newText);
     res.send('Note updated');
 });
+
+app.delete('/notes/:noteName', (req, res) => {
+    const notePath = path.join(option.cache, req.params.noteName);
+
+    if (!fs.existsSync(notePath)) {
+        return res.status(404).send('Not found');
+    }
+
+    fs.unlinkSync(notePath);
+    res.send('Note deleted');
+});
